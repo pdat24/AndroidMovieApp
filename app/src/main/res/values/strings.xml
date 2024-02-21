@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Movies</string>
+    <string name="image_desc">Image description</string>
+    <string name="favourite_show">Favourite Show</string>
+    <string name="discover_your">Discover Your</string>
+    <string name="watch_now_or_later">Watch Now or Watch Later</string>
+    <string name="intro_desc">You can browse movies and shows by genre, search for specific title, ot check out our recommendation for you</string>
+    <string name="get_started">Get Started</string>
+    <string name="email">E-mail</string>
+    <string name="password">Password</string>
+    <string name="sign_in">Sign in</string>
+    <string name="or">Or</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="sign_in_with_facebook">Sign in with Facebook</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="explore">Explore</string>
+    <string name="favourite">Favourite</string>
+    <string name="profile">Profile</string>
+    <string name="search_movies">Search movies</string>
+    <string name="trending_movies">Trending</string>
+    <string name="upcoming_movies">Upcoming</string>
+    <string name="category">Category</string>
+    <string name="recommendation">Recommendations</string>
+</resources>
