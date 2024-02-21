@@ -1,6 +1,7 @@
 package com.firstapp.moviesapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.firstapp.moviesapp.R;
 import com.firstapp.moviesapp.models.Movie;
+import com.firstapp.moviesapp.ui.activities.DetailActivity;
 import com.firstapp.moviesapp.utils.Constants;
 
 import java.util.List;
@@ -44,10 +46,19 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Movie movie = movies.get(position);
+        holder.container.setOnClickListener((view) -> {
+            Intent intent = new Intent(context, DetailActivity.class);
+            intent.putExtra(Constants.MOVIE_ID, movie.id);
+            intent.putExtra(Constants.VOTE_AVERAGE, movie.vote_average);
+            intent.putExtra(Constants.OVERVIEW, movie.overview);
+            intent.putExtra(Constants.TITLE, movie.title);
+            intent.putExtra(Constants.BACKDROP_IMAGE_URL, movie.backdrop_path);
+            context.startActivity(intent);
+        });
         holder.title.setText(movie.title);
         Glide.with(context)
             .asDrawable()
-            .load(Constants.IMAGE_HOST_URL + movie.backdrop_path)
+            .load(Constants.IMAGE_HOST_URL + movie.poster_path)
             .into(new SimpleTarget<Drawable>() {
                 @Override
                 public void onResourceReady(

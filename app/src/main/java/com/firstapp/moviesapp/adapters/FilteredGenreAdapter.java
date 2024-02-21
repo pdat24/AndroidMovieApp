@@ -18,13 +18,13 @@ import com.firstapp.moviesapp.models.Genre;
 
 import java.util.List;
 
-public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.ViewHolder> {
+public class FilteredGenreAdapter extends RecyclerView.Adapter<FilteredGenreAdapter.ViewHolder> {
     List<Genre> genres;
     MutableLiveData<Genre> filteredGenre;
     LifecycleOwner activity;
     Context context;
 
-    public GenreAdapter(LifecycleOwner activity, MutableLiveData<Genre> genreId, List<Genre> genres) {
+    public FilteredGenreAdapter(LifecycleOwner activity, MutableLiveData<Genre> genreId, List<Genre> genres) {
         this.genres = genres;
         this.activity = activity;
         this.filteredGenre = genreId;

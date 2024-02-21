@@ -8,6 +8,7 @@
     android:clickable="true"
     android:paddingHorizontal="16dp"
     android:paddingVertical="8dp"
+    android:layout_marginBottom="6dp"
     android:textColor="@color/light_grey">
 
 </TextView>

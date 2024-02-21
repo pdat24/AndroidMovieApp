@@ -19,7 +19,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.firstapp.moviesapp.R;
 import com.firstapp.moviesapp.adapters.BannerAdapter;
-import com.firstapp.moviesapp.adapters.GenreAdapter;
+import com.firstapp.moviesapp.adapters.FilteredGenreAdapter;
 import com.firstapp.moviesapp.adapters.MovieAdapter;
 import com.firstapp.moviesapp.apis.MoviesApi;
 import com.firstapp.moviesapp.models.Category;
@@ -102,6 +102,12 @@ public class ExploreFragment extends Fragment {
         }
 
         renderSlider();
+        loadedRowNumber.observe(requireActivity(), value -> {
+            if (value >= 3) {
+                loadingRecommendationMovies.setVisibility(View.GONE);
+            }
+        });
+        handleFilterGenres();
     }
 
     @Override
@@ -110,12 +116,6 @@ public class ExploreFragment extends Fragment {
         loadTrendingMovies();
         loadUpcomingMovies();
         loadGenres();
-        handleFilterGenres();
-        loadedRowNumber.observe(this, value -> {
-            if (value >= 3) {
-                loadingRecommendationMovies.setVisibility(View.GONE);
-            }
-        });
     }
 
     void setupLayoutManagers() {
@@ -202,7 +202,7 @@ public class ExploreFragment extends Fragment {
     void loadGenres() {
         if (mainViewModel.movieCategory != null) {
             loadingGenres.setVisibility(View.GONE);
-            rcvCategory.setAdapter(new GenreAdapter(requireActivity(), filteredGenre, mainViewModel.movieCategory.genres));
+            rcvCategory.setAdapter(new FilteredGenreAdapter(requireActivity(), filteredGenre, mainViewModel.movieCategory.genres));
         } else {
             Call<Category> task = moviesApi.getMovieGenres();
             new Thread(() -> {
@@ -214,7 +214,7 @@ public class ExploreFragment extends Fragment {
                         mainViewModel.movieCategory = response.body();
                         requireActivity().runOnUiThread(() -> {
                             loadingGenres.setVisibility(View.GONE);
-                            rcvCategory.setAdapter(new GenreAdapter(requireActivity(), filteredGenre, genres));
+                            rcvCategory.setAdapter(new FilteredGenreAdapter(requireActivity(), filteredGenre, genres));
                         });
                     }
                 } catch (IOException e) {
@@ -226,9 +226,9 @@ public class ExploreFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     void handleFilterGenres() {
-        filteredGenre.observe(this, (genre) -> {
+        filteredGenre.observe(requireActivity(), (genre) -> {
             if (genre.id == DEFAULT_GENRE_ID) {
-                this.genre.setText("(All)");
+                this.genre.setText("(Mix)");
                 loadRecommendationMovies(mainViewModel.row1Movies, 3, rcvRow1, Row.ROW1);
                 loadRecommendationMovies(mainViewModel.row2Movies, 4, rcvRow2, Row.ROW2);
                 loadRecommendationMovies(mainViewModel.row3Movies, 5, rcvRow3, Row.ROW3);

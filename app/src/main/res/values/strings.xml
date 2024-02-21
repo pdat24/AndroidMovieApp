@@ -22,4 +22,6 @@
     <string name="upcoming_movies">Upcoming</string>
     <string name="category">Category</string>
     <string name="proposes">Proposes</string>
+    <string name="overview">Overview</string>
+    <string name="production_companies">Production companies</string>
 </resources>

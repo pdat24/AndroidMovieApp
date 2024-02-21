@@ -1,6 +1,7 @@
 package com.firstapp.moviesapp.apis;
 
 import com.firstapp.moviesapp.models.Category;
+import com.firstapp.moviesapp.models.MovieDetail;
 import com.firstapp.moviesapp.models.TrendingMovie;
 import com.firstapp.moviesapp.models.UpcomingMovie;
 import com.firstapp.moviesapp.utils.Constants;
@@ -8,6 +9,7 @@ import com.firstapp.moviesapp.utils.Constants;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface MoviesApi {
@@ -37,5 +39,11 @@ public interface MoviesApi {
     Call<TrendingMovie> getMoviesByGenre(
         @Query("with_genres") String genreId,
         @Query("page") int page
+    );
+
+    @GET("movie/{movie_id}?language=en-US")
+    @Headers("Authorization: Bearer " + Constants.ACCESS_TOKEN_AUTH)
+    Call<MovieDetail> getMovieDetail(
+        @Path("movie_id") int movieId
     );
 }
