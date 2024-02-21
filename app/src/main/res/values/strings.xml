@@ -21,5 +21,5 @@
     <string name="trending_movies">Trending</string>
     <string name="upcoming_movies">Upcoming</string>
     <string name="category">Category</string>
-    <string name="recommendation">Recommendations</string>
+    <string name="proposes">Proposes</string>
 </resources>

@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_marginEnd="12dp"
     android:background="@drawable/bg_movie_genre"
+    android:clickable="true"
     android:paddingHorizontal="16dp"
     android:paddingVertical="8dp"
     android:textColor="@color/light_grey">

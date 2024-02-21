@@ -7,4 +7,5 @@ public class Constants {
     static public final String FIREBASE_SERVER_CLIENT_ID = "897960097150-jteeehp6rbv88jmstg43o52bvg4brdp3.apps.googleusercontent.com";
     static public final String ACCOUNT_IS_EXISTING_EXCEPTION = "com.google.firebase.auth.FirebaseAuthUserCollisionException";
     static public final String INVALID_CREDENTIALS_EXCEPTION = "com.google.firebase.auth.FirebaseAuthInvalidCredentialsException";
+    static public final int DEFAULT_GENRE_ID = -1;
 }

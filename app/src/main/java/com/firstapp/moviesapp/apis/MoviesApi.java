@@ -26,9 +26,16 @@ public interface MoviesApi {
         @Query("page") int page
     );
 
-    @GET("discover/movie?include_adult=false&include_video=false&language=en-US&sort_by=popularity.desc")
+    @GET("movie/popular?language=en-US")
     @Headers("Authorization: Bearer " + Constants.ACCESS_TOKEN_AUTH)
     Call<TrendingMovie> getMovies(
+        @Query("page") int page
+    );
+
+    @GET("discover/movie?include_adult=false&include_video=false&language=en-US&sort_by=popularity.desc")
+    @Headers("Authorization: Bearer " + Constants.ACCESS_TOKEN_AUTH)
+    Call<TrendingMovie> getMoviesByGenre(
+        @Query("with_genres") String genreId,
         @Query("page") int page
     );
 }

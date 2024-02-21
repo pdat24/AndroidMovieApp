@@ -13,5 +13,4 @@ public class MainViewModel extends ViewModel {
     public TrendingMovie row1Movies = null;
     public TrendingMovie row2Movies = null;
     public TrendingMovie row3Movies = null;
-    public TrendingMovie row4Movies = null;
 }
