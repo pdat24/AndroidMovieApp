@@ -54,7 +54,39 @@
             android:id="@+id/slider"
             android:layout_width="match_parent"
             android:layout_height="220dp"
-            android:paddingHorizontal="60dp" />
+            android:layout_marginTop="8dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:overScrollMode="always"
+            android:paddingHorizontal="48dp" />
+
+        <LinearLayout
+            android:id="@+id/indicatorContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="16dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/bg_unchecked_indicator" />
+
+            <View
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/bg_unchecked_indicator" />
+
+            <View
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/bg_unchecked_indicator" />
+        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -165,12 +197,12 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tvGenre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginBottom="12dp"
                 android:text="Mix"
-                android:id="@+id/tvGenre"
                 android:textColor="@color/light_grey"
                 android:textSize="14sp" />
         </LinearLayout>

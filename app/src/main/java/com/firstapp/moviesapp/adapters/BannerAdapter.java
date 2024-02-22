@@ -32,7 +32,7 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.view.setBackgroundResource(items.get(position));
+        holder.view.setImageResource(items.get(position));
     }
 
     @Override
@@ -44,7 +44,6 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.ViewHolder
         ViewHolder(View itemView) {
             super(itemView);
         }
-
         ImageView view = itemView.findViewById(R.id.ivItem);
     }
 }

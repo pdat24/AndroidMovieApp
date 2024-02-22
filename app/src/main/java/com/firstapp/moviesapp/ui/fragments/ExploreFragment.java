@@ -7,14 +7,18 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.CompositePageTransformer;
+import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.firstapp.moviesapp.R;
@@ -46,12 +50,13 @@ public class ExploreFragment extends Fragment {
     RecyclerView rcvRow2;
     RecyclerView rcvRow3;
     TextView genre;
-    ViewPager2 slider;
+    ViewPager2 viewPager2;
     MoviesApi moviesApi;
     MainViewModel mainViewModel;
     CircularProgressIndicator loadingGenres;
     CircularProgressIndicator loadingTrendingMovies;
     CircularProgressIndicator loadingUpcomingMovies;
+    LinearLayout indicatorContainer;
     CircularProgressIndicator loadingRecommendationMovies;
     AtomicInteger tmp = new AtomicInteger(0);
     MutableLiveData<Integer> loadedRowNumber = new MutableLiveData<>(0);
@@ -75,8 +80,9 @@ public class ExploreFragment extends Fragment {
         rcvRow1 = view.findViewById(R.id.rcvRow1);
         rcvRow2 = view.findViewById(R.id.rcvRow2);
         rcvRow3 = view.findViewById(R.id.rcvRow3);
-        slider = view.findViewById(R.id.slider);
+        viewPager2 = view.findViewById(R.id.slider);
         loadingGenres = view.findViewById(R.id.loadingGenres);
+        indicatorContainer = view.findViewById(R.id.indicatorContainer);
         genre = view.findViewById(R.id.tvGenre);
         loadingTrendingMovies = view.findViewById(R.id.loadingTrendingMovies);
         loadingUpcomingMovies = view.findViewById(R.id.loadingUpcomingMovies);
@@ -101,7 +107,7 @@ public class ExploreFragment extends Fragment {
             loadingRecommendationMovies.setVisibility(View.VISIBLE);
         }
 
-        renderSlider();
+        renderCarousel();
         loadedRowNumber.observe(requireActivity(), value -> {
             if (value >= 3) {
                 loadingRecommendationMovies.setVisibility(View.GONE);
@@ -163,12 +169,46 @@ public class ExploreFragment extends Fragment {
         );
     }
 
-    void renderSlider() {
-        slider.setAdapter(
+    void renderCarousel() {
+        viewPager2.setAdapter(
             new BannerAdapter(Arrays.asList(
                 R.drawable.wide, R.drawable.wide1, R.drawable.wide3)
             )
         );
+
+        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            int prevPage = 1;
+
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                indicatorContainer.getChildAt(prevPage).setBackground(
+                    AppCompatResources.getDrawable(
+                        requireContext(),
+                        R.drawable.bg_unchecked_indicator
+                    )
+                );
+                indicatorContainer.getChildAt(position).setBackground(
+                    AppCompatResources.getDrawable(
+                        requireContext(),
+                        R.drawable.bg_checked_indicator
+                    )
+                );
+                prevPage = position;
+            }
+        });
+        viewPager2.setCurrentItem(1);
+        viewPager2.setOffscreenPageLimit(3);
+        CompositePageTransformer pageTransformer = new CompositePageTransformer();
+        pageTransformer.addTransformer(new MarginPageTransformer(32));
+        pageTransformer.addTransformer(new ViewPager2.PageTransformer() {
+            @Override
+            public void transformPage(@NonNull View page, float position) {
+                float r = 1 - Math.abs(position);
+                page.setScaleY(0.85f + r * 0.15f);
+            }
+        });
+        viewPager2.setPageTransformer(pageTransformer);
     }
 
     void loadTrendingMovies() {
