@@ -16,7 +16,7 @@
         android:ellipsize="end"
         android:lines="2"
         android:textColor="@color/white"
-        android:textSize="12sp" />
+        android:textSize="11sp" />
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"

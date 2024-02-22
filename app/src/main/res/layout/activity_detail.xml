@@ -47,11 +47,11 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
+                    android:id="@+id/ivFavourite"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_back_btn"
                     android:contentDescription="@string/image_desc"
-                    android:onClick="addToFavouriteMovies"
                     android:padding="10dp"
                     android:src="@drawable/fav"
                     app:layout_constraintEnd_toEndOf="parent"

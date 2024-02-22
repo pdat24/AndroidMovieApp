@@ -9,9 +9,9 @@ public class Constants {
     static public final String INVALID_CREDENTIALS_EXCEPTION = "com.google.firebase.auth.FirebaseAuthInvalidCredentialsException";
     static public final int DEFAULT_GENRE_ID = -1;
     static public final String MOVIE_ID = "MOVIE_ID";
-    static public final String BACKDROP_IMAGE_URL = "BACKDROP_IMAGE_URL";
+    static public final String BACKDROP_IMAGE_PATH = "BACKDROP_IMAGE_PATH";
     static public final String VOTE_AVERAGE = "VOTE_AVERAGE";
     static public final String TITLE = "TITLE";
     static public final String OVERVIEW = "OVERVIEW";
-    static public final String RUNTIME = "RUNTIME";
+    static public final String POSTER_PATH = "POSTER_PATH";
 }

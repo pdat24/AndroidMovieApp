@@ -59,4 +59,8 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment:2.7.7")
 
     implementation("com.google.android.flexbox:flexbox:3.0.0")
+
+    val roomVersion = "2.6.1"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    annotationProcessor("androidx.room:room-compiler:$roomVersion")
 }

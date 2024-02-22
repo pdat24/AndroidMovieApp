@@ -1,6 +1,7 @@
 package com.firstapp.moviesapp.ui.activities;
 
 import android.annotation.SuppressLint;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,6 +17,8 @@ import com.bumptech.glide.Glide;
 import com.firstapp.moviesapp.R;
 import com.firstapp.moviesapp.adapters.CompanyAdapter;
 import com.firstapp.moviesapp.apis.MoviesApi;
+import com.firstapp.moviesapp.db.FavouriteMoviesDaoImpl;
+import com.firstapp.moviesapp.models.FavouriteMovie;
 import com.firstapp.moviesapp.models.Genre;
 import com.firstapp.moviesapp.models.MovieDetail;
 import com.firstapp.moviesapp.utils.Constants;
@@ -36,6 +40,7 @@ public class DetailActivity extends AppCompatActivity {
 
     TextView voteAverage;
     TextView runtime;
+    ImageView btnFavourite;
     FlexboxLayout genresView;
     RecyclerView rcvCompanies;
     TextView overview;
@@ -44,6 +49,10 @@ public class DetailActivity extends AppCompatActivity {
     @Inject
     MoviesApi moviesApi;
     int movieId;
+    String movieTitle;
+    String moviePosterPath;
+    FavouriteMoviesDaoImpl favouriteMoviesDao;
+    MutableLiveData<Boolean> isFavouriteMovie = new MutableLiveData<>(false);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,17 +67,22 @@ public class DetailActivity extends AppCompatActivity {
         runtime = findViewById(R.id.tvRuntime);
         genresView = findViewById(R.id.genres);
         rcvCompanies = findViewById(R.id.rcvCompanies);
+        btnFavourite = findViewById(R.id.ivFavourite);
         movieId = extras.getInt(Constants.MOVIE_ID);
+        movieTitle = extras.getString(Constants.TITLE);
+        moviePosterPath = extras.getString(Constants.POSTER_PATH);
         rcvCompanies.setLayoutManager(new LinearLayoutManager(
             this, LinearLayoutManager.HORIZONTAL, false
         ));
+        favouriteMoviesDao = new FavouriteMoviesDaoImpl(this);
 
+        btnFavourite.setOnClickListener(this::toggleFavouriteMovies);
         setMovieDetailInfo();
         overview.setText(extras.getString(Constants.OVERVIEW));
-        title.setText(extras.getString(Constants.TITLE));
+        title.setText(movieTitle);
         Glide.with(this)
             .load(
-                Constants.IMAGE_HOST_URL + extras.getString(Constants.BACKDROP_IMAGE_URL)
+                Constants.IMAGE_HOST_URL + extras.getString(Constants.BACKDROP_IMAGE_PATH)
             ).into(thumbnail);
         // set vote average
         DecimalFormat pattern = new DecimalFormat("#.#");
@@ -76,10 +90,41 @@ public class DetailActivity extends AppCompatActivity {
         voteAverage.setText(pattern.format(
             extras.getDouble(Constants.VOTE_AVERAGE)
         ));
+        new Thread(() -> {
+            List<FavouriteMovie> movies = favouriteMoviesDao.getFavouriteMovies();
+            for (FavouriteMovie movie : movies) {
+                if (movie.id == movieId) {
+                    isFavouriteMovie.postValue(true);
+                    break;
+                }
+            }
+        }).start();
     }
 
-    public void addToFavouriteMovies(View view) {
+    @Override
+    protected void onStart() {
+        super.onStart();
+        isFavouriteMovie.observe(this, (isFav) -> {
+            if (isFav)
+                btnFavourite.setImageTintList(ColorStateList.valueOf(getColor(R.color.yellow)));
+            else
+                btnFavourite.setImageTintList(ColorStateList.valueOf(getColor(R.color.white)));
+        });
+    }
 
+    void toggleFavouriteMovies(View view) {
+        new Thread(() -> {
+            assert isFavouriteMovie.getValue() != null : "isFavouriteMovie is null!";
+            if (isFavouriteMovie.getValue()) {
+                favouriteMoviesDao.removeFavouriteMovies(movieId);
+                isFavouriteMovie.postValue(false);
+            } else {
+                favouriteMoviesDao.addFavouriteMovies(new FavouriteMovie(
+                    movieId, movieTitle, moviePosterPath
+                ));
+                isFavouriteMovie.postValue(true);
+            }
+        }).start();
     }
 
     @SuppressLint("SetTextI18n")

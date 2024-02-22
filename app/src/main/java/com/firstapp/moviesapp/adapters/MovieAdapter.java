@@ -52,7 +52,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
             intent.putExtra(Constants.VOTE_AVERAGE, movie.vote_average);
             intent.putExtra(Constants.OVERVIEW, movie.overview);
             intent.putExtra(Constants.TITLE, movie.title);
-            intent.putExtra(Constants.BACKDROP_IMAGE_URL, movie.backdrop_path);
+            intent.putExtra(Constants.BACKDROP_IMAGE_PATH, movie.backdrop_path);
+            intent.putExtra(Constants.POSTER_PATH, movie.poster_path);
             context.startActivity(intent);
         });
         holder.title.setText(movie.title);
