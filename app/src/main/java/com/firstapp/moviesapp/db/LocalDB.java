@@ -6,7 +6,6 @@ import androidx.room.Database;
 import androidx.room.RoomDatabase;
 
 import com.firstapp.moviesapp.models.FavouriteMovie;
-import com.firstapp.moviesapp.models.MovieDetail;
 
 import java.util.concurrent.atomic.AtomicReference;
 

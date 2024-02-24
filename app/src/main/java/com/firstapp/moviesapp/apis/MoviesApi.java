@@ -46,4 +46,11 @@ public interface MoviesApi {
     Call<MovieDetail> getMovieDetail(
         @Path("movie_id") int movieId
     );
+
+    @GET("search/movie?include_adult=false&language=en-US")
+    @Headers("Authorization: Bearer " + Constants.ACCESS_TOKEN_AUTH)
+    Call<TrendingMovie> searchMovies(
+        @Query("query") String query,
+        @Query("page") int page
+    );
 }

@@ -3,6 +3,7 @@ package com.firstapp.moviesapp.ui.fragments;
 import static com.firstapp.moviesapp.utils.Constants.DEFAULT_GENRE_ID;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.firstapp.moviesapp.MainApp;
 import com.firstapp.moviesapp.R;
 import com.firstapp.moviesapp.adapters.BannerAdapter;
 import com.firstapp.moviesapp.adapters.FilteredGenreAdapter;
@@ -31,7 +33,8 @@ import com.firstapp.moviesapp.models.Genre;
 import com.firstapp.moviesapp.models.TrendingMovie;
 import com.firstapp.moviesapp.models.UpcomingMovie;
 import com.firstapp.moviesapp.ui.activities.MainActivity;
-import com.firstapp.moviesapp.ui.viewmodels.MainViewModel;
+import com.firstapp.moviesapp.ui.activities.SearchActivity;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 import java.io.IOException;
@@ -45,6 +48,7 @@ import retrofit2.Response;
 public class ExploreFragment extends Fragment {
     RecyclerView rcvTrendingMovies;
     RecyclerView rcvUpcomingMovies;
+    MaterialCardView btnSearch;
     RecyclerView rcvCategory;
     RecyclerView rcvRow1;
     RecyclerView rcvRow2;
@@ -52,7 +56,6 @@ public class ExploreFragment extends Fragment {
     TextView genre;
     ViewPager2 viewPager2;
     MoviesApi moviesApi;
-    MainViewModel mainViewModel;
     CircularProgressIndicator loadingGenres;
     CircularProgressIndicator loadingTrendingMovies;
     CircularProgressIndicator loadingUpcomingMovies;
@@ -81,6 +84,7 @@ public class ExploreFragment extends Fragment {
         rcvRow2 = view.findViewById(R.id.rcvRow2);
         rcvRow3 = view.findViewById(R.id.rcvRow3);
         viewPager2 = view.findViewById(R.id.slider);
+        btnSearch = view.findViewById(R.id.btnSearch);
         loadingGenres = view.findViewById(R.id.loadingGenres);
         indicatorContainer = view.findViewById(R.id.indicatorContainer);
         genre = view.findViewById(R.id.tvGenre);
@@ -88,21 +92,26 @@ public class ExploreFragment extends Fragment {
         loadingUpcomingMovies = view.findViewById(R.id.loadingUpcomingMovies);
         loadingRecommendationMovies = view.findViewById(R.id.loadingRecommendation);
         moviesApi = ((MainActivity) requireActivity()).moviesApi;
-        mainViewModel = ((MainActivity) requireActivity()).mainViewModel;
-        setupLayoutManagers();
-        if (mainViewModel.trendingMovie == null) {
+
+        assignHorizontalLinearLayoutManager(rcvCategory);
+        assignHorizontalLinearLayoutManager(rcvUpcomingMovies);
+        assignHorizontalLinearLayoutManager(rcvTrendingMovies);
+        assignHorizontalLinearLayoutManager(rcvRow1);
+        assignHorizontalLinearLayoutManager(rcvRow2);
+        assignHorizontalLinearLayoutManager(rcvRow3);
+        if (MainActivity.trendingMovie == null) {
             loadingTrendingMovies.setVisibility(View.VISIBLE);
         }
-        if (mainViewModel.movieCategory == null) {
+        if (MainActivity.movieCategory == null) {
             loadingGenres.setVisibility(View.VISIBLE);
         }
-        if (mainViewModel.movieCategory == null) {
+        if (MainActivity.movieCategory == null) {
             loadingUpcomingMovies.setVisibility(View.VISIBLE);
         }
         if (
-            mainViewModel.row1Movies == null ||
-                mainViewModel.row2Movies == null ||
-                mainViewModel.row3Movies == null
+            MainActivity.row1Movies == null ||
+                MainActivity.row2Movies == null ||
+                MainActivity.row3Movies == null
         ) {
             loadingRecommendationMovies.setVisibility(View.VISIBLE);
         }
@@ -113,6 +122,9 @@ public class ExploreFragment extends Fragment {
                 loadingRecommendationMovies.setVisibility(View.GONE);
             }
         });
+        btnSearch.setOnClickListener((v) ->
+            startActivity(new Intent(requireActivity(), SearchActivity.class))
+        );
         handleFilterGenres();
     }
 
@@ -124,43 +136,8 @@ public class ExploreFragment extends Fragment {
         loadGenres();
     }
 
-    void setupLayoutManagers() {
-        rcvCategory.setLayoutManager(
-            new LinearLayoutManager(
-                requireContext(),
-                LinearLayoutManager.HORIZONTAL,
-                false
-            )
-        );
-        rcvUpcomingMovies.setLayoutManager(
-            new LinearLayoutManager(
-                requireContext(),
-                LinearLayoutManager.HORIZONTAL,
-                false
-            )
-        );
-        rcvTrendingMovies.setLayoutManager(
-            new LinearLayoutManager(
-                requireContext(),
-                LinearLayoutManager.HORIZONTAL,
-                false
-            )
-        );
-        rcvRow1.setLayoutManager(
-            new LinearLayoutManager(
-                requireContext(),
-                LinearLayoutManager.HORIZONTAL,
-                false
-            )
-        );
-        rcvRow2.setLayoutManager(
-            new LinearLayoutManager(
-                requireContext(),
-                LinearLayoutManager.HORIZONTAL,
-                false
-            )
-        );
-        rcvRow3.setLayoutManager(
+    void assignHorizontalLinearLayoutManager(@NonNull RecyclerView view) {
+        view.setLayoutManager(
             new LinearLayoutManager(
                 requireContext(),
                 LinearLayoutManager.HORIZONTAL,
@@ -212,10 +189,10 @@ public class ExploreFragment extends Fragment {
     }
 
     void loadTrendingMovies() {
-        if (mainViewModel.trendingMovie != null) {
+        if (MainActivity.trendingMovie != null) {
             loadingTrendingMovies.setVisibility(View.GONE);
             rcvTrendingMovies.setAdapter(new MovieAdapter(
-                mainViewModel.trendingMovie.results
+                MainActivity.trendingMovie.results
             ));
         } else {
             Call<TrendingMovie> task = moviesApi.getTrendingMovie();
@@ -224,11 +201,11 @@ public class ExploreFragment extends Fragment {
                     Response<TrendingMovie> response = task.execute();
                     if (response.isSuccessful()) {
                         assert response.body() != null;
-                        mainViewModel.trendingMovie = response.body();
+                        MainActivity.trendingMovie = response.body();
                         requireActivity().runOnUiThread(() -> {
                             loadingTrendingMovies.setVisibility(View.GONE);
                             rcvTrendingMovies.setAdapter(
-                                new MovieAdapter(mainViewModel.trendingMovie.results)
+                                new MovieAdapter(MainActivity.trendingMovie.results)
                             );
                         });
                     }
@@ -240,9 +217,9 @@ public class ExploreFragment extends Fragment {
     }
 
     void loadGenres() {
-        if (mainViewModel.movieCategory != null) {
+        if (MainActivity.movieCategory != null) {
             loadingGenres.setVisibility(View.GONE);
-            rcvCategory.setAdapter(new FilteredGenreAdapter(requireActivity(), filteredGenre, mainViewModel.movieCategory.genres));
+            rcvCategory.setAdapter(new FilteredGenreAdapter(requireActivity(), filteredGenre, MainActivity.movieCategory.genres));
         } else {
             Call<Category> task = moviesApi.getMovieGenres();
             new Thread(() -> {
@@ -251,10 +228,13 @@ public class ExploreFragment extends Fragment {
                     if (response.isSuccessful()) {
                         assert response.body() != null;
                         List<Genre> genres = response.body().genres;
-                        mainViewModel.movieCategory = response.body();
+                        MainApp.genres = genres;
+                        MainActivity.movieCategory = response.body();
                         requireActivity().runOnUiThread(() -> {
                             loadingGenres.setVisibility(View.GONE);
-                            rcvCategory.setAdapter(new FilteredGenreAdapter(requireActivity(), filteredGenre, genres));
+                            rcvCategory.setAdapter(
+                                new FilteredGenreAdapter(requireActivity(), filteredGenre, genres)
+                            );
                         });
                     }
                 } catch (IOException e) {
@@ -269,9 +249,9 @@ public class ExploreFragment extends Fragment {
         filteredGenre.observe(requireActivity(), (genre) -> {
             if (genre.id == DEFAULT_GENRE_ID) {
                 this.genre.setText("(Mix)");
-                loadRecommendationMovies(mainViewModel.row1Movies, 3, rcvRow1, Row.ROW1);
-                loadRecommendationMovies(mainViewModel.row2Movies, 4, rcvRow2, Row.ROW2);
-                loadRecommendationMovies(mainViewModel.row3Movies, 5, rcvRow3, Row.ROW3);
+                loadRecommendationMovies(MainActivity.row1Movies, 3, rcvRow1, Row.ROW1);
+                loadRecommendationMovies(MainActivity.row2Movies, 4, rcvRow2, Row.ROW2);
+                loadRecommendationMovies(MainActivity.row3Movies, 5, rcvRow3, Row.ROW3);
             } else {
                 this.genre.setText("(" + genre.name + ")");
                 loadMovieByGenre(rcvRow1, String.valueOf(genre.id), 1);
@@ -282,10 +262,10 @@ public class ExploreFragment extends Fragment {
     }
 
     void loadUpcomingMovies() {
-        if (mainViewModel.upcomingMovie != null) {
+        if (MainActivity.upcomingMovie != null) {
             loadingUpcomingMovies.setVisibility(View.GONE);
             rcvUpcomingMovies.setAdapter(new MovieAdapter(
-                mainViewModel.upcomingMovie.results
+                MainActivity.upcomingMovie.results
             ));
         } else {
             Call<UpcomingMovie> task = moviesApi.getUpcomingMovie(2);
@@ -294,11 +274,11 @@ public class ExploreFragment extends Fragment {
                     Response<UpcomingMovie> response = task.execute();
                     if (response.isSuccessful()) {
                         assert response.body() != null;
-                        mainViewModel.upcomingMovie = response.body();
+                        MainActivity.upcomingMovie = response.body();
                         requireActivity().runOnUiThread(() -> {
                             loadingUpcomingMovies.setVisibility(View.GONE);
                             rcvUpcomingMovies.setAdapter(
-                                new MovieAdapter(mainViewModel.upcomingMovie.results)
+                                new MovieAdapter(MainActivity.upcomingMovie.results)
                             );
                         });
                     }
@@ -317,7 +297,7 @@ public class ExploreFragment extends Fragment {
     ) {
         if (cachedMovies != null) {
             loadedRowNumber.postValue(tmp.addAndGet(1));
-            rcvRow1.setAdapter(new MovieAdapter(cachedMovies.results));
+            view.setAdapter(new MovieAdapter(cachedMovies.results));
         } else {
             Call<TrendingMovie> task = moviesApi.getMovies(page);
             new Thread(() -> {
@@ -326,11 +306,11 @@ public class ExploreFragment extends Fragment {
                     if (response.isSuccessful()) {
                         assert response.body() != null;
                         if (row == Row.ROW1) {
-                            mainViewModel.row1Movies = response.body();
+                            MainActivity.row1Movies = response.body();
                         } else if (row == Row.ROW2) {
-                            mainViewModel.row2Movies = response.body();
+                            MainActivity.row2Movies = response.body();
                         } else if (row == Row.ROW3) {
-                            mainViewModel.row3Movies = response.body();
+                            MainActivity.row3Movies = response.body();
                         }
                         requireActivity().runOnUiThread(() -> {
                             loadedRowNumber.postValue(tmp.addAndGet(1));

@@ -50,6 +50,8 @@ public class DetailActivity extends AppCompatActivity {
     MoviesApi moviesApi;
     int movieId;
     String movieTitle;
+    String movieOverview;
+    double movieVoteAverage;
     String moviePosterPath;
     FavouriteMoviesDaoImpl favouriteMoviesDao;
     MutableLiveData<Boolean> isFavouriteMovie = new MutableLiveData<>(false);
@@ -71,6 +73,8 @@ public class DetailActivity extends AppCompatActivity {
         movieId = extras.getInt(Constants.MOVIE_ID);
         movieTitle = extras.getString(Constants.TITLE);
         moviePosterPath = extras.getString(Constants.POSTER_PATH);
+        movieOverview = extras.getString(Constants.OVERVIEW);
+        movieVoteAverage = extras.getDouble(Constants.VOTE_AVERAGE);
         rcvCompanies.setLayoutManager(new LinearLayoutManager(
             this, LinearLayoutManager.HORIZONTAL, false
         ));
@@ -78,7 +82,7 @@ public class DetailActivity extends AppCompatActivity {
 
         btnFavourite.setOnClickListener(this::toggleFavouriteMovies);
         setMovieDetailInfo();
-        overview.setText(extras.getString(Constants.OVERVIEW));
+        overview.setText(movieOverview);
         title.setText(movieTitle);
         Glide.with(this)
             .load(
@@ -87,9 +91,7 @@ public class DetailActivity extends AppCompatActivity {
         // set vote average
         DecimalFormat pattern = new DecimalFormat("#.#");
         pattern.setRoundingMode(RoundingMode.HALF_UP);
-        voteAverage.setText(pattern.format(
-            extras.getDouble(Constants.VOTE_AVERAGE)
-        ));
+        voteAverage.setText(pattern.format(movieVoteAverage));
         new Thread(() -> {
             List<FavouriteMovie> movies = favouriteMoviesDao.getFavouriteMovies();
             for (FavouriteMovie movie : movies) {
@@ -124,6 +126,8 @@ public class DetailActivity extends AppCompatActivity {
                 ));
                 isFavouriteMovie.postValue(true);
             }
+            MainActivity.loadFavouriteMovies(getApplicationContext());
+            MainActivity.isFavouriteMoviesChanged = true;
         }).start();
     }
 

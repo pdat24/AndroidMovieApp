@@ -8,11 +8,12 @@ public class FavouriteMovie {
 
     public FavouriteMovie(int mid, String mTitle, String mPosterUrl) {
         id = mid;
-        mTitle = mTitle;
-        mPosterUrl = mPosterUrl;
+        title = mTitle;
+        posterUrl = mPosterUrl;
     }
 
-    public FavouriteMovie() {}
+    public FavouriteMovie() {
+    }
 
     @PrimaryKey
     public int id;

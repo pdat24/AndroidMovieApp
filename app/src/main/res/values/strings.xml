@@ -24,4 +24,8 @@
     <string name="proposes">Proposes</string>
     <string name="overview">Overview</string>
     <string name="production_companies">Production companies</string>
+    <string name="search">Search</string>
+    <string name="explore_now"><u>Explore now</u></string>
+    <string name="no_fav_movie">"No favourite movie. "</string>
+    <string name="no_result">No result is found</string>
 </resources>

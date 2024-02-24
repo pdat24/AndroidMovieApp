@@ -24,10 +24,10 @@ public class FilteredGenreAdapter extends RecyclerView.Adapter<FilteredGenreAdap
     LifecycleOwner activity;
     Context context;
 
-    public FilteredGenreAdapter(LifecycleOwner activity, MutableLiveData<Genre> genreId, List<Genre> genres) {
+    public FilteredGenreAdapter(LifecycleOwner activity, MutableLiveData<Genre> filteredGenre, List<Genre> genres) {
         this.genres = genres;
         this.activity = activity;
-        this.filteredGenre = genreId;
+        this.filteredGenre = filteredGenre;
     }
 
     @NonNull
@@ -54,7 +54,7 @@ public class FilteredGenreAdapter extends RecyclerView.Adapter<FilteredGenreAdap
                 // remove filter
                 if (filteredGenreValue.id == genre.id)
                     filteredGenre.postValue(new Genre(DEFAULT_GENRE_ID, ""));
-                    // add filter
+                // add filter
                 else
                     filteredGenre.postValue(genre);
             }

@@ -111,8 +111,6 @@ public class SignInActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-//                                AuthResult result = task.getResult();
-                            // TODO: save user
                             startActivity(
                                 new Intent(SignInActivity.this, MainActivity.class)
                             );
@@ -151,7 +149,6 @@ public class SignInActivity extends AppCompatActivity {
                         finish();
                     } else {
                         String exceptionName = task.getException().getClass().getName();
-                        System.out.println(exceptionName);
                         if (exceptionName.equals(Constants.INVALID_CREDENTIALS_EXCEPTION))
                             createAccountWithEmailAndPassword(email, password);
                     }

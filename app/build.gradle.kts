@@ -49,8 +49,6 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     // glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
-    // mongodb
-//    implementation("org.mongodb:mongodb-driver-sync:4.11.1")
     // dagger-hilt
     implementation("com.google.dagger:hilt-android:2.48")
     annotationProcessor("com.google.dagger:hilt-android-compiler:2.44")
@@ -63,4 +61,6 @@ dependencies {
     val roomVersion = "2.6.1"
     implementation("androidx.room:room-runtime:$roomVersion")
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
+
+    implementation("com.google.android.flexbox:flexbox:3.0.0")
 }

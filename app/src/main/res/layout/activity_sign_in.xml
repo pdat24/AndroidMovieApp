@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ui.activities.SignInActivity">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_gradient"
-        tools:context=".ui.activities.SignInActivity">
+        android:background="@drawable/bg_gradient">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -164,9 +164,9 @@
     </ScrollView>
 
     <include
+        android:id="@+id/viewLoading"
+        layout="@layout/view_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        android:id="@+id/viewLoading"
-        layout="@layout/view_loading" />
+        android:visibility="gone" />
 </FrameLayout>
