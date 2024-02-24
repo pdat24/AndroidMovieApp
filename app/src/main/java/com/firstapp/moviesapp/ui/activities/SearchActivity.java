@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,7 +36,7 @@ public class SearchActivity extends AppCompatActivity {
     RecyclerView rcvSearchSuggestions;
     TextInputEditText searchInput;
     InputMethodManager inputMethodManager;
-    Thread searchThread = null;
+    TextView noResults;
     @Inject
     MoviesApi moviesApi;
 
@@ -47,6 +48,7 @@ public class SearchActivity extends AppCompatActivity {
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         rcvSearchSuggestions = findViewById(R.id.rcvSearchSuggestions);
         searchInput = findViewById(R.id.ipSearch);
+        noResults = findViewById(R.id.tvNoResult);
 
         rcvSearchSuggestions.setLayoutManager(new LinearLayoutManager(this));
         // focus on search input
@@ -64,9 +66,7 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String text = s.toString();
-                if (!text.trim().isEmpty())
-                    handleSearchMovie(text);
+                handleSearchMovie(s.toString().trim());
             }
 
             @Override
@@ -76,10 +76,8 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     void handleSearchMovie(String query) {
-        // TODO: Change logic
-        if (searchThread != null)
-            searchThread.stop();
-        searchThread = new Thread(() -> {
+        if (!query.isEmpty())
+        new Thread(() -> {
             Call<TrendingMovie> req = moviesApi.searchMovies(query, 1);
             try {
                 Response<TrendingMovie> res = req.execute();
@@ -91,6 +89,10 @@ public class SearchActivity extends AppCompatActivity {
                         for (Movie movie : tmp)
                             if (movie.backdrop_path != null)
                                 results.add(movie);
+                        if (results.isEmpty())
+                            noResults.setVisibility(View.VISIBLE);
+                        else
+                            noResults.setVisibility(View.GONE);
                         rcvSearchSuggestions.setAdapter(
                             new SearchResultAdapter(results)
                         );
@@ -99,8 +101,9 @@ public class SearchActivity extends AppCompatActivity {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        });
-        searchThread.start();
+        }).start();
+        else
+            noResults.setVisibility(View.GONE);
     }
 
     public void back(View view) {

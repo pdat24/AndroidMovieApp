@@ -1,7 +1,11 @@
 package com.firstapp.moviesapp.ui.activities;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.fragment.NavHostFragment;
@@ -17,6 +21,7 @@ import com.firstapp.moviesapp.models.TrendingMovie;
 import com.firstapp.moviesapp.models.UpcomingMovie;
 import com.firstapp.moviesapp.utils.Constants;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     FavouriteMoviesDaoImpl favouriteMoviesDao;
     @Inject
     public MoviesApi moviesApi;
+    InputMethodManager inputMethodManager;
     static public Category movieCategory = null;
     static public TrendingMovie trendingMovie = null;
     static public UpcomingMovie upcomingMovie = null;
@@ -49,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().setStatusBarColor(getColor(R.color.black_2));
+        inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         favouriteMoviesDao = new FavouriteMoviesDaoImpl(this);
         BottomNavigationView navBar = findViewById(R.id.bottomNavBar);
 
@@ -84,5 +91,24 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }).start();
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View focusedView = getCurrentFocus();
+            if (focusedView instanceof TextInputEditText) {
+                Rect rect = new Rect();
+                focusedView.getClipBounds(rect);
+                if (!rect.contains((int) ev.getX(), (int) ev.getY())) {
+                    focusedView.clearFocus();
+                    inputMethodManager.hideSoftInputFromWindow(
+                        focusedView.getWindowToken(),
+                        InputMethodManager.RESULT_UNCHANGED_SHOWN
+                    );
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev);
     }
 }
