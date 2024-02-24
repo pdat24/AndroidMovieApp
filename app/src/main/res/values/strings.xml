@@ -28,4 +28,5 @@
     <string name="explore_now"><u>Explore now</u></string>
     <string name="no_fav_movie">"No favourite movie. "</string>
     <string name="no_result">No result is found</string>
+    <string name="sign_out">Sign out</string>
 </resources>
