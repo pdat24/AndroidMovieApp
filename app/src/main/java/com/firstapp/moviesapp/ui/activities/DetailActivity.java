@@ -1,6 +1,7 @@
 package com.firstapp.moviesapp.ui.activities;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -87,7 +88,8 @@ public class DetailActivity extends AppCompatActivity {
         Glide.with(this)
             .load(
                 Constants.IMAGE_HOST_URL + extras.getString(Constants.BACKDROP_IMAGE_PATH)
-            ).into(thumbnail);
+            ).placeholder(R.drawable.intro_pic)
+            .into(thumbnail);
         // set vote average
         DecimalFormat pattern = new DecimalFormat("#.#");
         pattern.setRoundingMode(RoundingMode.HALF_UP);
@@ -112,6 +114,12 @@ public class DetailActivity extends AppCompatActivity {
             else
                 btnFavourite.setImageTintList(ColorStateList.valueOf(getColor(R.color.white)));
         });
+    }
+
+    public void gotoVideoScreen(View v) {
+        startActivity(
+            new Intent(this, VideoPlayerActivity.class)
+        );
     }
 
     void toggleFavouriteMovies(View view) {

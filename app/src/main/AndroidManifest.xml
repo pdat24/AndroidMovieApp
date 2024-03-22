@@ -17,6 +17,9 @@
         android:theme="@style/Theme.MoviesApp"
         tools:targetApi="31">
         <activity
+            android:name=".ui.activities.VideoPlayerActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activities.SearchActivity"
             android:exported="false" />
         <activity

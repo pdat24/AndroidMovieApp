@@ -63,4 +63,8 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
 
     implementation("com.google.android.flexbox:flexbox:3.0.0")
+
+    // media3 exoplayer
+    implementation("androidx.media3:media3-exoplayer:1.3.0")
+    implementation("androidx.media3:media3-ui:1.3.0")
 }
